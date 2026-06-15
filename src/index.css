@@ -1,3 +1,6 @@
+/* ==========================================================================
+   1. DESIGN TOKENS & VARIABLES
+   ========================================================================== */
 :root {
   --bg-darkest: #000000;      /* Pure black portfolio background */
   --bg-sidebar: #0a0a0a;      /* Subtly lighter sidebar layer */
@@ -8,6 +11,9 @@
   --border-color: #1a1a1a;    /* Subtle separation lines */
 }
 
+/* ==========================================================================
+   2. BASE DOCUMENT STYLES
+   ========================================================================== */
 body {
   margin: 0;
   background-color: var(--bg-darkest);
@@ -16,16 +22,47 @@ body {
   overflow: hidden;
 }
 
-/* Base Layout Structure Grid */
+/* ==========================================================================
+   3. STRUCTURAL APP LAYOUT
+   ========================================================================== */
+/* Main full-viewport flex grid layer */
 .app-layout {
-  display: grid;
-  grid-template-columns: 260px 1fr;
+  display: flex;
+  flex-direction: column;
   height: 100vh;
   width: 100vw;
   overflow: hidden;
 }
 
-/* Sidebar Drawer Section styling rules */
+/* Expansive full-width top header row */
+.chat-header {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--bg-sidebar);
+  height: 60px;
+  box-sizing: border-box;
+}
+
+.chat-header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+/* Inner split grid layout wrapper sitting below the header */
+.main-content {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  height: calc(100vh - 60px); 
+  width: 100vw;
+}
+
+/* ==========================================================================
+   4. SIDEBAR NAVIGATION DRAWED
+   ========================================================================== */
 .sidebar {
   background-color: var(--bg-sidebar);
   border-right: 1px solid var(--border-color);
@@ -86,7 +123,9 @@ body {
   padding-left: 0.5rem;
 }
 
-/* Main chat execution sandbox column */
+/* ==========================================================================
+   5. CHAT CONSOLE SANDBOX
+   ========================================================================== */
 .chat-container {
   display: flex;
   flex-direction: column;
@@ -94,31 +133,57 @@ body {
   height: 100%;
 }
 
-.chat-header {
-  padding: 1rem 1.5rem;
-  border-bottom: 1px solid var(--border-color);
+/* Modified: Enhanced text banner row spacing to accommodate active button elements */
+.chat-window-title {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-between; /* Pushes spacer left, text middle, button right */
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--bg-chat);
+  height: 52px;              
+  box-sizing: border-box;
 }
 
-.chat-header h2 {
+.chat-window-title h3 {
   margin: 0;
-  font-size: 1.2rem;
-  font-weight: 600;
+  font-size: 1.15rem;        
+  font-weight: 600;          
+  color: var(--text-light);
+  opacity: 0.95;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;       
+  max-width: 70%;            
 }
 
-.status-badge.local {
-  background: #222222;
-  color: var(--color-accent);
-  border: 1px solid var(--color-accent);
-  padding: 0.25rem 0.5rem;
-  font-size: 0.75rem;
-  border-radius: 4px;
+/* Structural flex layout empty space balancing block hook */
+.title-spacer {
+  width: 75px; 
+}
+
+/* New: Red-accented minimalist action button styles */
+.delete-chat-btn {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8rem;
   font-weight: 500;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 75px;
+  text-align: center;
+  transition: all 0.2s ease;
 }
 
-/* Dynamic Scrolling dialogue bubble stack view window */
+.delete-chat-btn:hover {
+  background-color: #1a0507; /* Soft dark red indicator layer */
+  border-color: var(--color-accent);
+  color: var(--color-accent); /* Vibrant red highlight state */
+}
+
+/* Dynamic scrolling chat bubble log grid area */
 .message-area {
   flex: 1;
   overflow-y: auto;
@@ -128,7 +193,6 @@ body {
   gap: 1.25rem;
 }
 
-/* Messaging bubble sizing parameters and alignments */
 .message-bubble {
   display: flex;
   max-width: 75%;
@@ -137,25 +201,32 @@ body {
 .message-bubble.user { align-self: flex-end; }
 .message-bubble.bot { align-self: flex-start; }
 
+/* Conversation Chat Bubble Styling Hooks */
 .bubble-content {
-  padding: 0.85rem 1.15rem;
-  border-radius: 12px;
+  padding: 0.85rem 1.25rem;
   line-height: 1.5;
   font-size: 0.95rem;
 }
 
+/* User Bubble Tail Shape */
 .user .bubble-content { 
   background-color: var(--color-accent); 
   color: #ffffff;
+  border-radius: 20px 20px 4px 20px; 
 }
 
+/* Bot Bubble Tail Shape */
 .bot .bubble-content { 
   background-color: #111111;
   border: 1px solid var(--border-color);
   color: #eeeeee;
+  border-radius: 20px 20px 20px 4px; 
 }
 
-/* Bottom text prompt console container bar styles */
+/* ==========================================================================
+   6. USER INTERACTION ELEMENTS
+   ========================================================================== */
+/* Bottom message prompt submission container row */
 .input-area {
   display: flex;
   padding: 1.5rem;
@@ -196,56 +267,23 @@ body {
   opacity: 0.9;
 }
 
-.typing-indicator{
-  display: flex;
-  gap: 6px; /* Space between the dots */
-  align-items: center;
-}
-/* Animated Thinking Loader Spans */
-.typing-indicator span {
-  width: 8px;              /* Slightly larger for better visual visibility */
-  height: 8px;
-  background-color: var(--text-muted);
-  border-radius: 50%;
-  display: inline-block;
-  /* Smooth wave bounce animation running infinitely */
-  animation: waveBounce 1.2s infinite ease-in-out;
+.status-badge.local {
+  background: #222222;
+  color: var(--color-accent);
+  border: 1px solid var(--color-accent);
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  border-radius: 4px;
+  font-weight: 500;
 }
 
-/* Stagger the delays perfectly so they move up and down one by one */
-.typing-indicator span:nth-child(1) {
-  animation-delay: 0s;
-}
-
-.typing-indicator span:nth-child(2) {
-  animation-delay: 0.2s;
-}
-
-.typing-indicator span:nth-child(3) {
-  animation-delay: 0.4s;
-}
-
-/* Clear vertical translation movement keyframes */
-@keyframes waveBounce {
-  0%, 100% {
-    transform: translateY(0);       /* Baseline rest position */
-  }
-  30% {
-    transform: translateY(-8px);    /* Bounce upward up to 8 pixels */
-    background-color: var(--color-accent); /* Optional: turns your portfolio red at peak height! */
-  }
-  60% {
-    transform: translateY(0);       /* Return back smoothly */
-  }
-}
-
-/* Center the Welcome Container layout precisely */
+/* Centered fallback splash view container */
 .welcome-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  flex: 1;                     /* Fills up the entire empty scrolling window */
+  flex: 1;                     
   text-align: center;
   opacity: 0.8;
 }
@@ -261,4 +299,40 @@ body {
   font-size: 1rem;
   color: var(--text-muted);
   margin: 0;
+}
+
+/* ==========================================================================
+   7. ANIMATIONS & MICRO-INTERACTIONS
+   ========================================================================== */
+.typing-indicator {
+  display: flex;
+  gap: 6px; 
+  align-items: center;
+}
+
+.typing-indicator span {
+  width: 8px;              
+  height: 8px;
+  background-color: var(--text-muted);
+  border-radius: 50%;
+  display: inline-block;
+  animation: waveBounce 1.2s infinite ease-in-out;
+}
+
+/* Sequential stagger wave delays */
+.typing-indicator span:nth-child(1) { animation-delay: 0s; }
+.typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+.typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes waveBounce {
+  0%, 100% {
+    transform: translateY(0);       
+  }
+  30% {
+    transform: translateY(-8px);    
+    background-color: var(--color-accent); 
+  }
+  60% {
+    transform: translateY(0);       
+  }
 }

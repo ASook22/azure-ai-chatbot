@@ -43,7 +43,7 @@ export default function App() {
       setConversations(prevConversations =>
         prevConversations.map(chat =>
           chat.id === activeChat
-            ? { ...chat, title: userPrompt.length > 22 ? userPrompt.substring(0, 20) + "..." : userPrompt }
+            ? { ...chat, title: userPrompt}
             : chat
         )
       );
@@ -60,7 +60,7 @@ export default function App() {
 
     // Calculate the accurate title name right here before entering the async timeout loop
     const targetTitle = isFirstMessage 
-      ? (userPrompt.length > 22 ? userPrompt.substring(0, 20) + "..." : userPrompt)
+      ? userPrompt
       : (conversations.find(chat => chat.id === activeChat)?.title || "This Conversation");
 
     // Simulate AI response after a delay
@@ -68,7 +68,9 @@ export default function App() {
       setIsTyping(false);
 
       // Clean title Name variable using our extracted targetTitle
+          // FIXED: Pointed the template variable directly to your stable pre-calculated targetTitle
       const rawResponse = `Local Response: I processed your text regarding "${userMessage.text}" inside your "${targetTitle}" workspace.`;
+
      
       const botMessageId = Date.now() + 1;
       const initialBotBubble = { id: botMessageId, sender: 'bot', text: "" };
@@ -119,11 +121,46 @@ export default function App() {
       [newId]: [{ id: Date.now(), sender: "bot", text: "Started a fresh chat instance channel. How can I assist you today?" }] }));
   };
 
+  const handleDeleteChat = () => {
+
+    if (conversations.length === 1) {
+      const resetId = `chat-${Date.now()}`;
+      setConversations([{ id: resetId, title: "New Chat" }]);
+      setActiveChat(resetId);
+      setChatMessages({ [resetId]: [{ id: Date.now(), sender: "bot", text: "Hello! I am your AI assistant. How can I help you today?" }] 
+    
+    }); 
+    return;
+    }
+
+    const currentActiveIndex = conversations.findIndex(c => c.id === activeChat);
+    const fallbackActiveChat = currentActiveIndex === 0 
+    ? conversations[1].id 
+    : conversations[currentActiveIndex - 1].id;
+
+    setConversations(prev => prev.filter(c => c.id !== activeChat));
+    setActiveChat(prev => {
+      const updatedMessages = { ...prev};
+      delete updatedMessages[activeChat];
+      return fallbackActiveChat;
+    });
+
+    setActiveChat(fallbackActiveChat);
+}
+
 
 
   return (
     <div className="app-layout">
       {/*Sidebar Navigation Panel Layout*/}
+
+        <header className="chat-header">
+          <h2>AI Chatbot</h2>
+          <span className="status-badge local">Local Dev</span>
+        </header>
+
+      <div className="main-content">
+        
       <aside className="sidebar">
         <button className="new-chat-btn" onClick={handleNewChat}>+ New Chat </button>
         <div className="history-list">
@@ -142,11 +179,12 @@ export default function App() {
 
       {/*Main Conversation Window Layout Dashboard*/}
       <main className="chat-container">
-        <header className="chat-header">
-          {/* Dynamically matches the active sidebar chat title name (your first prompt text) */}
-          <h2>Active Session: {conversations.find(c => c.id === activeChat)?.title || "Chat Console Workspace"}</h2>
-          <span className="status-badge local">Local Dev</span>
-        </header>
+        <div className="chat-window-title">
+          <h3>{conversations.find(c => c.id === activeChat)?.title || "Chat Console Workspace"}</h3>
+          <button className="delete-chat-btn" onClick={handleDeleteChat} title="Delete Chat">
+            🗑️
+          </button>
+        </div>
 
         <section className="message-area">
   
@@ -187,6 +225,7 @@ export default function App() {
           <button type="submit" disabled={!input.trim() || isTyping}>Send</button>
         </form>
       </main>
+      </div>  
     </div>
   );
 }
