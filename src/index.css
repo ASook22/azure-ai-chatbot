@@ -195,3 +195,46 @@ body {
 .input-area button:hover {
   opacity: 0.9;
 }
+
+.typing-indicator{
+  display: flex;
+  gap: 6px; /* Space between the dots */
+  align-items: center;
+}
+/* Animated Thinking Loader Spans */
+.typing-indicator span {
+  width: 8px;              /* Slightly larger for better visual visibility */
+  height: 8px;
+  background-color: var(--text-muted);
+  border-radius: 50%;
+  display: inline-block;
+  /* Smooth wave bounce animation running infinitely */
+  animation: waveBounce 1.2s infinite ease-in-out;
+}
+
+/* Stagger the delays perfectly so they move up and down one by one */
+.typing-indicator span:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.typing-indicator span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-indicator span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+/* Clear vertical translation movement keyframes */
+@keyframes waveBounce {
+  0%, 100% {
+    transform: translateY(0);       /* Baseline rest position */
+  }
+  30% {
+    transform: translateY(-8px);    /* Bounce upward up to 8 pixels */
+    background-color: var(--color-accent); /* Optional: turns your portfolio red at peak height! */
+  }
+  60% {
+    transform: translateY(0);       /* Return back smoothly */
+  }
+}
