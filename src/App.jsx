@@ -10,7 +10,7 @@ export default function App() {
   const [activeChat, setActiveChat] = useState("chat1");
 
   const [chatMessages, setChatMessages] = useState({
-    "chat-initial": [{ id: "m-init", sender: "bot", text: "Hello! I am your AI assistant. How can I help you today?" }]
+    "chat1": [{ id: "m-init", sender: "bot", text: "Hello! I am your AI assistant. How can I help you today?" }]
   });
 
   const [input,setInput] = useState("");
@@ -26,7 +26,6 @@ export default function App() {
   chatendRef.current?.scrollIntoView({ behavior: 'smooth' });
  }, [activeMessages, isTyping]);
 
-  // 3. Handles Form submission and mock AI responses with letter-by-letter streaming
    // 3. Handles Form submission and mock AI responses with letter-by-letter streaming
   const handleSend = async (e) => {
     e.preventDefault();
@@ -122,13 +121,12 @@ export default function App() {
   };
 
   const handleDeleteChat = () => {
-
     if (conversations.length === 1) {
       const resetId = `chat-${Date.now()}`;
       setConversations([{ id: resetId, title: "New Chat" }]);
       setActiveChat(resetId);
-      setChatMessages({ [resetId]: [{ id: Date.now(), sender: "bot", text: "Hello! I am your AI assistant. How can I help you today?" }] 
-    
+      setChatMessages({ 
+        [resetId]: [{ id: Date.now(), sender: "bot", text: "Hello! I am your AI assistant. How can I help you today?" }] 
     }); 
     return;
     }
@@ -139,10 +137,11 @@ export default function App() {
     : conversations[currentActiveIndex - 1].id;
 
     setConversations(prev => prev.filter(c => c.id !== activeChat));
-    setActiveChat(prev => {
+
+    setChatMessages(prev => {
       const updatedMessages = { ...prev};
       delete updatedMessages[activeChat];
-      return fallbackActiveChat;
+      return updatedMessages;
     });
 
     setActiveChat(fallbackActiveChat);
@@ -180,6 +179,7 @@ export default function App() {
       {/*Main Conversation Window Layout Dashboard*/}
       <main className="chat-container">
         <div className="chat-window-title">
+          <div className="title-spacer"></div>
           <h3>{conversations.find(c => c.id === activeChat)?.title || "Chat Console Workspace"}</h3>
           <button className="delete-chat-btn" onClick={handleDeleteChat} title="Delete Chat">
             🗑️
